@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class UserTableSeeder extends Seeder
@@ -18,6 +19,7 @@ class UserTableSeeder extends Seeder
             ['name'=>'khan','email'=>'khan@gmail.com','password'=>'12345678'],
             ['name'=>'arats','email'=>'arats@gmail.com','password'=>'12345678'],
             ['name'=>'arat khan','email'=>'aratkhan@gmail.com','password'=>'12345678'],
-        ]
+        ];
+        User::insert($users);
     }
 }
