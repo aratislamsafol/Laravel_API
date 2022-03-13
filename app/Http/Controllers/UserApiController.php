@@ -56,4 +56,43 @@ class UserApiController extends Controller
         }
 
     }
+
+    public function multiAddUsers(Request $request){
+        if($request->isMethod('post')){
+            $data=$request->all();
+            // return $data;
+            // For Validation
+
+            $req=[
+                'users.*.name'=>'required',
+                'users.*.email'=>'required|email|unique:users',
+                'users.*.password'=>'required',
+            ];
+
+            $cMessage=[
+                'users.*.name.required'=>'Name is Required',
+                'users.*.email.required'=>'Email is Required',
+                'users.*.email.email'=>'Email must be valid Email',
+                'users.*.password.required'=>'Password is Required',
+            ];
+
+           $validator=FacadesValidator::make($data,$req, $cMessage);
+           if($validator->fails()){
+                return response()->json($validator->errors(),422);
+           }
+
+           foreach($data['users'] as $usersdata){
+            $users=new User();
+
+            $users->name= $usersdata['name'];
+            $users->email= $usersdata['email'];
+            $users->password= bcrypt($usersdata['password']);
+            $users->save();
+
+            $msg="Data Added Successfully";
+
+           }
+           return response()->json(['msg'=>$msg],201);
+        }
+    }
 }
