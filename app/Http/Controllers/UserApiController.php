@@ -95,4 +95,40 @@ class UserApiController extends Controller
            return response()->json(['msg'=>$msg],201);
         }
     }
+
+    public function userUpdate(Request $request,$id){
+        if($request->isMethod('put')){
+            $data=$request->all();
+
+            $valid=[
+                'name'=>'required',
+                'password'=>'required',
+            ];
+
+            $message=[
+                'name.required'=>'Name is Required',
+                'password.required'=>'Password is Required',
+            ];
+
+            $validaton=FacadesValidator::make($data,$valid,$message);
+            if($validaton->fails()){
+                return response()->json($validaton->errors(),422);
+            }
+
+            $user=User::findorfail($id);
+
+                $user->name=$data['name'];
+                $user->password=$data['password'];
+                $user->save();
+
+                $msg="Data Update Successfully";
+                return response()->json(['msg'=>$msg],202);
+
+            // }else{
+            //     $msgerr="Something Wrong,Data Not Saved";
+            //     return response()->json(['msg'=>$msgerr],404);
+            // }
+
+        }
+    }
 }
